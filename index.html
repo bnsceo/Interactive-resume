@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anderson Paulino — Customer Service Professional</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyan: #00f5ff;
+    --purple: #b44fff;
+    --cyan-dim: rgba(0,245,255,0.13);
+    --purple-dim: rgba(180,79,255,0.13);
+    --cyan-glow: 0 0 20px rgba(0,245,255,0.4), 0 0 60px rgba(0,245,255,0.1);
+    --purple-glow: 0 0 20px rgba(180,79,255,0.4), 0 0 60px rgba(180,79,255,0.1);
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.08);
+    --glass-strong: rgba(255,255,255,0.07);
+    --bg: #050810;
+    --text: #e2e8f8;
+    --text-dim: rgba(226,232,248,0.5);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+    --display: 'Orbitron', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); overflow-x: hidden; min-height: 100vh; }
+
+  #particle-canvas { position: fixed; top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0; }
+
+  .orb { position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:0.3; }
+  .orb-1 { width:600px;height:600px;background:var(--purple);top:-200px;left:-200px;animation:drift1 20s ease-in-out infinite; }
+  .orb-2 { width:500px;height:500px;background:var(--cyan);bottom:-150px;right:-150px;animation:drift2 25s ease-in-out infinite; }
+  .orb-3 { width:280px;height:280px;background:var(--purple);top:50%;left:50%;animation:drift3 18s ease-in-out infinite; }
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,-80px)}}
+  @keyframes drift3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-60%,-40%) scale(1.3)}}
+
+  .wrapper { position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 24px 80px; }
+
+  nav {
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    background:rgba(5,8,16,0.75);border-bottom:1px solid var(--glass-border);
+    padding:14px 32px;display:flex;align-items:center;justify-content:space-between;
+  }
+  .nav-brand { font-family:var(--display);font-size:0.72rem;letter-spacing:0.15em;color:var(--cyan);text-shadow:var(--cyan-glow); }
+  .nav-links { display:flex;gap:28px;list-style:none; }
+  .nav-links a { font-family:var(--mono);font-size:0.68rem;letter-spacing:0.1em;color:var(--text-dim);text-decoration:none;transition:color 0.2s; }
+  .nav-links a:hover { color:var(--cyan); }
+
+  /* HERO */
+  .hero { padding-top:120px;padding-bottom:60px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center; }
+  .hero-text h1 { font-family:var(--display);font-size:clamp(1.6rem,3.5vw,2.7rem);font-weight:900;line-height:1.1;letter-spacing:0.05em;margin-bottom:8px; }
+  .name-cyan { color:var(--cyan);text-shadow:var(--cyan-glow); }
+  .name-purple { color:var(--purple);text-shadow:var(--purple-glow); }
+  .hero-badge { display:inline-block;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.2em;color:var(--purple);border:1px solid var(--purple);border-radius:2px;padding:4px 12px;margin-bottom:20px;box-shadow:var(--purple-glow); }
+  .hero-desc { font-size:0.92rem;line-height:1.75;color:var(--text-dim);margin-bottom:24px;max-width:440px; }
+  .hero-chips { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:30px; }
+  .chip { font-family:var(--mono);font-size:0.63rem;letter-spacing:0.1em;padding:5px 12px;border-radius:20px;border:1px solid; }
+  .chip-cyan { border-color:var(--cyan);color:var(--cyan);background:var(--cyan-dim); }
+  .chip-purple { border-color:var(--purple);color:var(--purple);background:var(--purple-dim); }
+  .hero-ctas { display:flex;gap:12px; }
+  .btn { font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;padding:12px 24px;border-radius:4px;cursor:pointer;text-decoration:none;border:1px solid;transition:all 0.25s; }
+  .btn-cyan { background:var(--cyan-dim);border-color:var(--cyan);color:var(--cyan); }
+  .btn-cyan:hover { background:rgba(0,245,255,0.22);box-shadow:var(--cyan-glow); }
+  .btn-ghost { background:transparent;border-color:var(--glass-border);color:var(--text-dim); }
+  .btn-ghost:hover { border-color:var(--purple);color:var(--purple); }
+
+  /* TERMINAL */
+  .terminal-wrap { perspective:800px; }
+  .terminal { background:rgba(5,8,16,0.88);border:1px solid rgba(0,245,255,0.25);border-radius:12px;overflow:hidden;box-shadow:var(--cyan-glow),0 40px 80px rgba(0,0,0,0.6);backdrop-filter:blur(20px);transform:rotateY(-8deg) rotateX(4deg);transition:transform 0.5s ease;transform-style:preserve-3d; }
+  .terminal-wrap:hover .terminal { transform:rotateY(0deg) rotateX(0deg); }
+  .terminal-bar { background:rgba(255,255,255,0.05);border-bottom:1px solid rgba(0,245,255,0.15);padding:10px 16px;display:flex;align-items:center;gap:8px; }
+  .t-dot { width:12px;height:12px;border-radius:50%; }
+  .t-dot-r { background:#ff5f57; } .t-dot-y { background:#febc2e; } .t-dot-g { background:#28c840; }
+  .t-title { font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);margin:0 auto;letter-spacing:0.08em; }
+  .terminal-body { padding:20px;font-family:var(--mono);font-size:0.78rem;line-height:1.8;height:320px;overflow-y:auto; }
+  .terminal-body::-webkit-scrollbar{width:4px} .terminal-body::-webkit-scrollbar-thumb{background:var(--cyan-dim);border-radius:2px;}
+  .t-line { display:flex;gap:8px;align-items:flex-start; }
+  .t-prompt { color:var(--cyan);user-select:none;flex-shrink:0; }
+  .t-cmd { color:var(--text); }
+  .t-out { color:var(--text-dim);padding-left:20px; }
+  .t-out .t-val { color:var(--purple); }
+  .t-out .t-key { color:var(--cyan); }
+  .t-out .t-str { color:#ffd700; }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+  .terminal-input-row { border-top:1px solid rgba(0,245,255,0.1);padding:10px 20px;display:flex;align-items:center;gap:8px; }
+  .terminal-input-row span { color:var(--cyan);font-family:var(--mono);font-size:0.78rem; }
+  .terminal-input-row input { background:transparent;border:none;outline:none;color:var(--text);font-family:var(--mono);font-size:0.78rem;flex:1;caret-color:var(--cyan); }
+
+  /* SECTIONS */
+  .section { padding:70px 0; }
+  .section-eyebrow { display:flex;align-items:center;gap:12px;margin-bottom:12px; }
+  .eyebrow-line { height:1px;flex:1;max-width:60px;background:linear-gradient(90deg,var(--purple),transparent); }
+  .eyebrow-label { font-family:var(--mono);font-size:0.65rem;letter-spacing:0.2em;color:var(--purple);text-transform:uppercase; }
+  .section-title { font-family:var(--display);font-size:clamp(1.3rem,3vw,1.9rem);font-weight:700;letter-spacing:0.05em;margin-bottom:40px; }
+  .title-accent { color:var(--cyan);text-shadow:var(--cyan-glow); }
+
+  /* GLASS CARD */
+  .glass-card { background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:all 0.3s ease; }
+  .glass-card:hover { background:var(--glass-strong);border-color:rgba(0,245,255,0.2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.4),var(--cyan-glow); }
+
+  /* STATS */
+  .stats-row { display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:50px; }
+  .stat-card { padding:24px 20px;text-align:center; }
+  .stat-val { font-family:var(--display);font-size:1.8rem;font-weight:900;color:var(--cyan);text-shadow:var(--cyan-glow);display:block; }
+  .stat-label { font-size:0.7rem;color:var(--text-dim);letter-spacing:0.08em; }
+
+  /* EXPERIENCE */
+  .exp-grid { display:flex;flex-direction:column;gap:20px; }
+  .exp-card { padding:28px 32px;position:relative;overflow:hidden; }
+  .exp-card::before { content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--cyan),var(--purple));border-radius:2px; }
+  .exp-header { display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:6px; }
+  .exp-role { font-weight:600;font-size:1rem;color:var(--text); }
+  .exp-date { font-family:var(--mono);font-size:0.68rem;color:var(--cyan);letter-spacing:0.08em;white-space:nowrap; }
+  .exp-company { font-family:var(--mono);font-size:0.72rem;color:var(--purple);letter-spacing:0.08em;margin-bottom:14px; }
+  .exp-bullets { list-style:none; }
+  .exp-bullets li { font-size:0.875rem;color:var(--text-dim);line-height:1.6;margin-bottom:6px;padding-left:18px;position:relative; }
+  .exp-bullets li::before { content:'▸';position:absolute;left:0;color:var(--cyan);font-size:0.65rem;top:3px; }
+
+  /* SKILLS */
+  .skills-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px; }
+  .skill-group { padding:24px; }
+  .skill-group-title { font-family:var(--display);font-size:0.7rem;letter-spacing:0.15em;color:var(--purple);margin-bottom:16px;text-transform:uppercase; }
+  .skill-item { margin-bottom:14px; }
+  .skill-name-row { display:flex;justify-content:space-between;margin-bottom:6px; }
+  .skill-name { font-size:0.82rem;color:var(--text); }
+  .skill-pct { font-family:var(--mono);font-size:0.68rem;color:var(--cyan); }
+  .skill-bar { height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden; }
+  .skill-fill { height:100%;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--purple));box-shadow:0 0 8px var(--cyan);width:0%;transition:width 1.2s cubic-bezier(0.25,1,0.5,1); }
+
+  /* EDUCATION */
+  .edu-grid { display:grid;grid-template-columns:1fr 1fr;gap:20px; }
+  .edu-card { padding:28px; }
+  .edu-year { font-family:var(--mono);font-size:0.65rem;color:var(--cyan);letter-spacing:0.12em;margin-bottom:8px; }
+  .edu-degree { font-weight:600;font-size:0.95rem;margin-bottom:4px; }
+  .edu-school { font-family:var(--mono);font-size:0.72rem;color:var(--purple);letter-spacing:0.08em;margin-bottom:10px; }
+  .edu-note { font-size:0.8rem;color:var(--text-dim);line-height:1.5; }
+
+  /* CONTACT */
+  .contact-grid { display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start; }
+  .contact-info { display:flex;flex-direction:column;gap:14px; }
+  .contact-item { display:flex;align-items:center;gap:12px;padding:14px 18px; }
+  .contact-icon { width:36px;height:36px;border-radius:8px;background:var(--cyan-dim);border:1px solid rgba(0,245,255,0.2);display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0; }
+  .contact-label { font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.08em; }
+  .contact-val { font-size:0.85rem;color:var(--text); }
+
+  /* CHATBOT */
+  .chatbot-panel { padding:0;overflow:hidden; }
+  .chat-header { padding:16px 20px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;gap:10px; }
+  .chat-avatar { width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:0.9rem; }
+  .chat-name { font-family:var(--mono);font-size:0.72rem;color:var(--cyan); }
+  .chat-status { font-size:0.62rem;color:#28c840; }
+  .chat-messages { height:220px;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:10px; }
+  .chat-messages::-webkit-scrollbar{width:3px} .chat-messages::-webkit-scrollbar-thumb{background:var(--purple-dim);border-radius:2px;}
+  .chat-msg { max-width:85%;font-size:0.8rem;line-height:1.5;padding:10px 14px;border-radius:10px; }
+  .chat-msg.bot { background:var(--cyan-dim);border:1px solid rgba(0,245,255,0.15);color:var(--text);border-radius:2px 10px 10px 10px;align-self:flex-start; }
+  .chat-msg.user { background:var(--purple-dim);border:1px solid rgba(180,79,255,0.15);color:var(--text);border-radius:10px 2px 10px 10px;align-self:flex-end; }
+  .chat-input-row { padding:12px 16px;border-top:1px solid var(--glass-border);display:flex;gap:8px; }
+  .chat-input { flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:6px;padding:8px 12px;color:var(--text);font-family:var(--sans);font-size:0.78rem;outline:none;transition:border-color 0.2s; }
+  .chat-input:focus { border-color:var(--cyan); }
+  .chat-send { background:var(--cyan-dim);border:1px solid var(--cyan);border-radius:6px;color:var(--cyan);font-family:var(--mono);font-size:0.75rem;padding:8px 14px;cursor:pointer;transition:all 0.2s; }
+  .chat-send:hover { background:rgba(0,245,255,0.22);box-shadow:var(--cyan-glow); }
+
+  .chat-chips { display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px;border-top:1px solid var(--glass-border); }
+  .chat-chip { font-family:var(--mono);font-size:0.62rem;letter-spacing:0.06em;padding:5px 10px;border-radius:20px;border:1px solid var(--glass-border);background:transparent;color:var(--text-dim);cursor:pointer;transition:all 0.2s;white-space:nowrap; }
+  .chat-chip:hover { border-color:var(--cyan);color:var(--cyan);background:var(--cyan-dim); }
+  .chat-typing { display:flex;align-items:center;gap:4px;padding:10px 14px;align-self:flex-start; }
+  .chat-typing span { width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:typingDot 1.2s ease-in-out infinite; }
+  .chat-typing span:nth-child(2){animation-delay:0.2s}
+  .chat-typing span:nth-child(3){animation-delay:0.4s}
+  @keyframes typingDot{0%,60%,100%{opacity:0.3;transform:scale(1)}30%{opacity:1;transform:scale(1.3)}}
+  #conn-canvas { width:100%;height:180px;border-radius:12px;background:rgba(5,8,16,0.5);border:1px solid var(--glass-border);margin-top:32px;cursor:crosshair; }
+
+  /* DIVIDER */
+  .divider { height:1px;background:linear-gradient(90deg,transparent,var(--purple),var(--cyan),transparent);margin:20px 0;opacity:0.3; }
+
+  /* BACK TO TOP */
+  #back-top { position:fixed;bottom:32px;right:32px;z-index:200;width:44px;height:44px;border-radius:50%;background:var(--glass);backdrop-filter:blur(10px);border:1px solid var(--cyan);color:var(--cyan);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--cyan-glow);opacity:0;transform:translateY(20px);transition:all 0.3s ease;text-decoration:none; }
+  #back-top.visible { opacity:1;transform:translateY(0); }
+  #back-top:hover { background:var(--cyan-dim);transform:translateY(-4px); }
+
+  /* REVEAL */
+  .reveal { opacity:0;transform:translateY(30px);transition:opacity 0.6s ease,transform 0.6s ease; }
+  .reveal.visible { opacity:1;transform:translateY(0); }
+
+  /* RESPONSIVE */
+  @media(max-width:768px){
+    .hero{grid-template-columns:1fr;}
+    .terminal{transform:none;}
+    .contact-grid,.edu-grid{grid-template-columns:1fr;}
+    .stats-row{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}}
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<nav>
+  <div class="nav-brand">⬡ ANDERSON.PAULINO</div>
+  <ul class="nav-links">
+    <li><a href="#experience">experience</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#education">education</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-text">
+      <div class="hero-badge">✦ CUSTOMER SERVICE PROFESSIONAL ✦</div>
+      <h1>
+        <span class="name-cyan">ANDERSON</span><br>
+        <span class="name-purple">PAULINO</span>
+      </h1>
+      <p class="hero-desc">
+        Results-driven service professional with a track record in high-volume call centers and supervisory leadership. I consistently exceed performance targets — 95% QA, 95 LOB — and I'm actively seeking my next opportunity to bring that same energy to a new team.
+      </p>
+      <div class="hero-chips">
+        <span class="chip chip-cyan">CRM Systems</span>
+        <span class="chip chip-purple">Team Leadership</span>
+        <span class="chip chip-cyan">KPI Tracking</span>
+        <span class="chip chip-purple">Problem Resolution</span>
+        <span class="chip chip-cyan">Compliance</span>
+      </div>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn btn-cyan">⬡ Contact Me</a>
+        <a href="#experience" class="btn btn-ghost">View Experience ↓</a>
+      </div>
+    </div>
+
+    <!-- TERMINAL -->
+    <div class="terminal-wrap">
+      <div class="terminal" id="terminal">
+        <div class="terminal-bar">
+          <div class="t-dot t-dot-r"></div>
+          <div class="t-dot t-dot-y"></div>
+          <div class="t-dot t-dot-g"></div>
+          <div class="t-title">anderson@paulino:~</div>
+        </div>
+        <div class="terminal-body" id="term-body"></div>
+        <div class="terminal-input-row">
+          <span>❯</span>
+          <input type="text" id="term-input" placeholder="type a command..." autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-row reveal">
+    <div class="glass-card stat-card">
+      <span class="stat-val" data-count="95">0</span>
+      <span class="stat-label">QA score %</span>
+    </div>
+    <div class="glass-card stat-card">
+      <span class="stat-val" data-count="95">0</span>
+      <span class="stat-label">LOB score</span>
+    </div>
+    <div class="glass-card stat-card">
+      <span class="stat-val" data-count="4">0</span>
+      <span class="stat-label">pts above team avg</span>
+    </div>
+    <div class="glass-card stat-card">
+      <span class="stat-val" data-count="7">0</span>
+      <span class="stat-label">years experience</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- EXPERIENCE -->
+  <section class="section reveal" id="experience">
+    <div class="section-eyebrow">
+      <div class="eyebrow-line"></div>
+      <div class="eyebrow-label">⬡ Professional Record</div>
+    </div>
+    <h2 class="section-title">Work <span class="title-accent">Experience</span></h2>
+
+    <div class="exp-grid">
+      <div class="glass-card exp-card">
+        <div class="exp-header">
+          <div class="exp-role">Customer Service Representative — PUMA Account</div>
+          <div class="exp-date">2025</div>
+        </div>
+        <div class="exp-company">// INTOUCHCX · Altamonte Springs, FL</div>
+        <ul class="exp-bullets">
+          <li>Achieved 95 LOB score — 4.17 points above team average of 90.83 — and maintained 95% QA across 10 evaluations</li>
+          <li>Handled high-volume inbound calls, resolving customer issues while consistently maintaining strong CSAT ratings</li>
+          <li>Processed returns, exchanges, and order inquiries with accuracy and efficiency under time pressure</li>
+          <li>Documented all interactions in CRM systems, ensuring full compliance and data accuracy</li>
+          <li>Identified recurring customer pain points and contributed actionable suggestions to process improvement initiatives</li>
+        </ul>
+      </div>
+
+      <div class="glass-card exp-card">
+        <div class="exp-header">
+          <div class="exp-role">Shift Supervisor</div>
+          <div class="exp-date">2020 — 2024</div>
+        </div>
+        <div class="exp-company">// ALLIED UNIVERSAL · Orlando, FL</div>
+        <ul class="exp-bullets">
+          <li>Supervised teams across high-traffic environments, handling escalations calmly and professionally</li>
+          <li>Coordinated scheduling, daily operations, and incident response across multiple client sites</li>
+          <li>Prepared detailed shift reports to maintain accurate documentation and clear communication up the chain</li>
+          <li>Trained incoming officers, driving measurable improvements in team performance and consistency</li>
+          <li>Served as the primary liaison between management and clients, building trust on both sides</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Connection viz -->
+    <canvas id="conn-canvas"></canvas>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SKILLS -->
+  <section class="section reveal" id="skills">
+    <div class="section-eyebrow">
+      <div class="eyebrow-line"></div>
+      <div class="eyebrow-label">⬡ Core Competencies</div>
+    </div>
+    <h2 class="section-title">Skill <span class="title-accent">Matrix</span></h2>
+
+    <div class="skills-grid">
+      <div class="glass-card skill-group">
+        <div class="skill-group-title">⟁ Customer Operations</div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">Customer Service</span><span class="skill-pct">98%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="98"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">Problem Resolution</span><span class="skill-pct">95%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="95"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">CRM Systems</span><span class="skill-pct">90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">Data Entry & Accuracy</span><span class="skill-pct">92%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="92"></div></div>
+        </div>
+      </div>
+      <div class="glass-card skill-group">
+        <div class="skill-group-title">⟁ Performance & Metrics</div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">KPI Tracking (CSAT/QA/AHT)</span><span class="skill-pct">95%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="95"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">Compliance</span><span class="skill-pct">95%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="95"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">Process Improvement</span><span class="skill-pct">85%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="85"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">Time Management</span><span class="skill-pct">90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
+        </div>
+      </div>
+      <div class="glass-card skill-group">
+        <div class="skill-group-title">⟁ Leadership & Communication</div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">Team Leadership</span><span class="skill-pct">92%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="92"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">Training & Coaching</span><span class="skill-pct">88%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="88"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">Verbal & Written Comm.</span><span class="skill-pct">93%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="93"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-name-row"><span class="skill-name">Adaptability</span><span class="skill-pct">95%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-pct="95"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- EDUCATION / CERTS -->
+  <section class="section reveal" id="education">
+    <div class="section-eyebrow">
+      <div class="eyebrow-line"></div>
+      <div class="eyebrow-label">⬡ Credentials</div>
+    </div>
+    <h2 class="section-title">Education & <span class="title-accent">Training</span></h2>
+    <div class="edu-grid">
+      <div class="glass-card edu-card">
+        <div class="edu-year">2025</div>
+        <div class="edu-degree">Customer Service Excellence</div>
+        <div class="edu-school">// INTOUCHCX (MOST RECENT ROLE)</div>
+        <div class="edu-note">Maintained 95% QA across all evaluations. Trained in PUMA brand standards, CRM workflows, high-volume call handling, and escalation resolution.</div>
+      </div>
+      <div class="glass-card edu-card">
+        <div class="edu-year">2020 — 2024</div>
+        <div class="edu-degree">Security & Supervisory Operations</div>
+        <div class="edu-school">// ALLIED UNIVERSAL · Florida</div>
+        <div class="edu-note">Certified in security operations, emergency response protocols, and multi-site supervisory management. Completed Allied Universal internal leadership training.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CONTACT -->
+  <section class="section reveal" id="contact">
+    <div class="section-eyebrow">
+      <div class="eyebrow-line"></div>
+      <div class="eyebrow-label">⬡ Get In Touch</div>
+    </div>
+    <h2 class="section-title">Open to <span class="title-accent">Opportunities</span></h2>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="glass-card contact-item">
+          <div class="contact-icon">✉</div>
+          <div>
+            <div class="contact-label">EMAIL</div>
+            <div class="contact-val">Andersonpaulino1982@gmail.com</div>
+          </div>
+        </div>
+        <div class="glass-card contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <div class="contact-label">PHONE</div>
+            <div class="contact-val">(347) 872-1661</div>
+          </div>
+        </div>
+        <div class="glass-card contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-label">LOCATION</div>
+            <div class="contact-val">Casselberry, FL</div>
+          </div>
+        </div>
+        <div class="glass-card contact-item">
+          <div class="contact-icon">⬡</div>
+          <div>
+            <div class="contact-label">STATUS</div>
+            <div class="contact-val" style="color:var(--cyan)">● Available for new roles</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHATBOT -->
+      <div class="glass-card chatbot-panel">
+        <div class="chat-header">
+          <div class="chat-avatar">⬡</div>
+          <div>
+            <div class="chat-name">ANDERSON-BOT <span style="font-size:0.6rem;color:var(--purple);letter-spacing:0.1em;">AI</span></div>
+            <div class="chat-status">● online — powered by Claude</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-msg bot">Hi! I'm an AI assistant who knows Anderson's full background. Ask me anything about his experience, performance, skills, or how to get in touch.</div>
+        </div>
+        <div class="chat-chips" id="chat-chips">
+          <button class="chat-chip" data-q="What are his top performance metrics?">📊 Performance</button>
+          <button class="chat-chip" data-q="What roles is he looking for?">🎯 Looking for</button>
+          <button class="chat-chip" data-q="What are his strongest skills?">⚡ Skills</button>
+          <button class="chat-chip" data-q="How do I contact Anderson?">📬 Contact</button>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" type="text" id="chat-input" placeholder="Ask anything about Anderson...">
+          <button class="chat-send" id="chat-send">⬡</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<a href="#hero" id="back-top" aria-label="Back to top">↑</a>
+
+<script>
+// PARTICLE CANVAS
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resizeCanvas(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+const COLORS = ['rgba(0,245,255,','rgba(180,79,255,'];
+function Particle(){ this.x=Math.random()*W; this.y=Math.random()*H; this.vx=(Math.random()-0.5)*0.4; this.vy=(Math.random()-0.5)*0.4; this.r=Math.random()*1.5+0.5; this.col=COLORS[Math.floor(Math.random()*2)]; }
+for(let i=0;i<80;i++) particles.push(new Particle());
+function animParticles(){
+  ctx.clearRect(0,0,W,H);
+  particles.forEach((p,i)=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.col+'0.6)'; ctx.fill();
+    for(let j=i+1;j<particles.length;j++){
+      const q=particles[j]; const dx=p.x-q.x,dy=p.y-q.y; const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){ ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.strokeStyle=p.col+(0.12*(1-dist/120))+')'; ctx.lineWidth=0.5; ctx.stroke(); }
+    }
+  });
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+
+// TERMINAL
+const termBody = document.getElementById('term-body');
+const termInput = document.getElementById('term-input');
+const termDB = {
+  help:{out:['  <span class="t-key">whoami</span>     — reveal identity','  <span class="t-key">skills</span>     — list core competencies','  <span class="t-key">metrics</span>    — show performance numbers','  <span class="t-key">contact</span>    — open communication channel','  <span class="t-key">status</span>     — availability check','  <span class="t-key">clear</span>      — purge terminal buffer']},
+  whoami:{out:['{','  <span class="t-key">"name"</span>: <span class="t-str">"Anderson Paulino"</span>,','  <span class="t-key">"title"</span>: <span class="t-str">"Customer Service Professional"</span>,','  <span class="t-key">"location"</span>: <span class="t-str">"Casselberry, FL"</span>,','  <span class="t-key">"last_role"</span>: <span class="t-str">"CSR @ IntouchCX (PUMA Account)"</span>,','  <span class="t-key">"status"</span>: <span class="t-str">"actively seeking new opportunities"</span>','}']},
+  skills:{out:['<span class="t-val">Service:</span>   Customer Care, CRM, Returns, Data Entry','<span class="t-val">Metrics:</span>   CSAT, QA, AHT, LOB Score Tracking','<span class="t-val">Leadership:</span> Supervision, Training, Scheduling','<span class="t-val">Soft Skills:</span> Empathy, Communication, Adaptability']},
+  metrics:{out:['<span class="t-key">QA Score</span>      → <span class="t-val">95%</span>  (across 10 evaluations)','<span class="t-key">LOB Score</span>     → <span class="t-val">95</span>   (+4.17 above team avg of 90.83)','<span class="t-key">CSAT</span>          → <span class="t-val">Strong</span> (consistently maintained)','<span class="t-key">Evaluations</span>   → <span class="t-val">10</span>   (all passing)']},
+  contact:{out:['<span class="t-key">email</span>  → <span class="t-str">Andersonpaulino1982@gmail.com</span>','<span class="t-key">phone</span>  → <span class="t-str">(347) 872-1661</span>','<span class="t-key">city</span>   → <span class="t-str">Casselberry, FL</span>']},
+  status:{out:['<span class="t-val">⬡ system</span>       ONLINE','<span class="t-val">⬡ availability</span>  OPEN TO NEW ROLES','<span class="t-val">⬡ response</span>     QUICK','<span class="t-val">⬡ attitude</span>     READY TO EXCEL']}
+};
+
+function addTermLine(type, content){
+  const div=document.createElement('div');
+  if(type==='prompt'){div.className='t-line';div.innerHTML=`<span class="t-prompt">❯</span><span class="t-cmd">${content}</span>`;}
+  else{div.className='t-out';div.innerHTML=content;}
+  termBody.appendChild(div); termBody.scrollTop=termBody.scrollHeight;
+}
+
+function runCommand(cmd){
+  cmd=cmd.trim().toLowerCase(); if(!cmd)return;
+  addTermLine('prompt',cmd);
+  if(cmd==='clear'){termBody.innerHTML='';return;}
+  const entry=termDB[cmd];
+  if(entry){entry.out.forEach((line,i)=>setTimeout(()=>addTermLine('out',line),i*60));}
+  else{setTimeout(()=>addTermLine('out',`<span style="color:#ff5f57">command not found: ${cmd} — try 'help'</span>`),60);}
+}
+
+const boot=[
+  {text:'<span class="t-val">Anderson Paulino OS</span> v1.0 — booting...',delay:200},
+  {text:'▸ Loading service protocols... <span style="color:#28c840">OK</span>',delay:600},
+  {text:'▸ Syncing CRM modules... <span style="color:#28c840">OK</span>',delay:1000},
+  {text:'▸ Calibrating KPI trackers... <span style="color:#28c840">OK</span>',delay:1400},
+  {text:'',delay:1700},
+  {text:'Welcome. Type <span class="t-key">help</span> to explore.',delay:1900},
+  {text:'',delay:2100},
+];
+boot.forEach(b=>setTimeout(()=>addTermLine('out',b.text),b.delay));
+termInput.addEventListener('keydown',e=>{if(e.key==='Enter'){runCommand(termInput.value);termInput.value='';}});
+
+// SCROLL REVEAL
+const reveals=document.querySelectorAll('.reveal');
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.skill-fill').forEach(bar=>{bar.style.width=bar.dataset.pct+'%';});
+    }
+  });
+},{threshold:0.1});
+reveals.forEach(r=>revObs.observe(r));
+
+// COUNTER ANIMATION
+const counters=document.querySelectorAll('[data-count]');
+const countObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target; const target=parseInt(el.dataset.count); let current=0; const inc=target/40;
+      const timer=setInterval(()=>{current+=inc;if(current>=target){current=target;clearInterval(timer);}el.textContent=Math.floor(current);},40);
+      countObs.unobserve(el);
+    }
+  });
+},{threshold:0.5});
+counters.forEach(c=>countObs.observe(c));
+
+// CONNECTION CANVAS
+const connCanvas=document.getElementById('conn-canvas');
+const connCtx=connCanvas.getContext('2d');
+let connNodes=[], mousePos=null;
+function resizeConn(){connCanvas.width=connCanvas.offsetWidth;connCanvas.height=connCanvas.offsetHeight;}
+resizeConn();
+const skillLabels=['CSAT','QA','AHT','CRM','LOB','Empathy','Compliance','Training','Scheduling','Leadership','Communication','Adaptability'];
+for(let i=0;i<12;i++){connNodes.push({x:Math.random()*connCanvas.width,y:Math.random()*connCanvas.height,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,label:skillLabels[i],r:4});}
+connCanvas.addEventListener('mousemove',e=>{const r=connCanvas.getBoundingClientRect();mousePos={x:e.clientX-r.left,y:e.clientY-r.top};});
+connCanvas.addEventListener('mouseleave',()=>mousePos=null);
+function animConn(){
+  connCtx.clearRect(0,0,connCanvas.width,connCanvas.height);
+  connNodes.forEach(n=>{
+    n.x+=n.vx;n.y+=n.vy;
+    if(n.x<20||n.x>connCanvas.width-20)n.vx*=-1;
+    if(n.y<20||n.y>connCanvas.height-20)n.vy*=-1;
+    if(mousePos){const dx=n.x-mousePos.x,dy=n.y-mousePos.y,d=Math.sqrt(dx*dx+dy*dy);if(d<80){n.vx+=dx/d*0.5;n.vy+=dy/d*0.5;}}
+    const speed=Math.sqrt(n.vx*n.vx+n.vy*n.vy);if(speed>2){n.vx=(n.vx/speed)*2;n.vy=(n.vy/speed)*2;}
+  });
+  for(let i=0;i<connNodes.length;i++){for(let j=i+1;j<connNodes.length;j++){
+    const a=connNodes[i],b=connNodes[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<150){connCtx.beginPath();connCtx.moveTo(a.x,a.y);connCtx.lineTo(b.x,b.y);connCtx.strokeStyle=`rgba(0,245,255,${0.15*(1-d/150)})`;connCtx.lineWidth=1;connCtx.stroke();}
+  }}
+  connNodes.forEach(n=>{
+    connCtx.beginPath();connCtx.arc(n.x,n.y,n.r,0,Math.PI*2);connCtx.fillStyle='#00f5ff';connCtx.shadowBlur=10;connCtx.shadowColor='#00f5ff';connCtx.fill();connCtx.shadowBlur=0;
+    connCtx.font='10px JetBrains Mono,monospace';connCtx.fillStyle='rgba(226,232,248,0.7)';connCtx.fillText(n.label,n.x+8,n.y+4);
+  });
+  requestAnimationFrame(animConn);
+}
+animConn();
+
+// CHATBOT — AI powered
+const chatMessages=document.getElementById('chat-messages');
+const chatInput=document.getElementById('chat-input');
+const chatSend=document.getElementById('chat-send');
+const chatChips=document.getElementById('chat-chips');
+
+const SYSTEM_PROMPT = `You are Anderson-Bot, a friendly and professional AI assistant embedded in Anderson Paulino's personal resume/portfolio website. Your job is to help recruiters, hiring managers, and employers learn about Anderson and get excited to reach out.
+
+Here is everything you know about Anderson:
+
+PERSONAL INFO:
+- Full name: Anderson Paulino
+- Location: Casselberry, FL
+- Phone: (347) 872-1661
+- Email: Andersonpaulino1982@gmail.com
+- Status: Currently unemployed and actively seeking new full-time opportunities in customer service, team leadership, or operations roles.
+
+PROFESSIONAL SUMMARY:
+Results-driven Customer Service Professional with experience in high-volume call center and supervisory roles. Consistently exceeded performance metrics (95% QA, 95 LOB) while delivering efficient, empathetic support. Skilled in CRM systems, KPI tracking, and problem resolution. Committed to improving customer experiences and operational efficiency.
+
+MOST RECENT ROLE (Last job):
+- Title: Customer Service Representative – PUMA Account
+- Company: IntouchCX, Altamonte Springs, FL
+- Dates: 2025 (no longer employed there — this was his most recent position)
+- Achievements: 95 LOB score (+4.17 above team avg of 90.83), 95% QA across 10 evaluations, handled high-volume inbound calls, processed returns/exchanges/order inquiries, documented interactions in CRM systems, identified recurring issues and contributed to process improvements.
+
+PREVIOUS ROLE:
+- Title: Shift Supervisor
+- Company: Allied Universal, Orlando, FL
+- Dates: 2020–2024
+- Achievements: Supervised teams in high-traffic environments, coordinated scheduling/operations/incident response across multiple sites, prepared detailed reports, trained new officers, served as liaison between management and clients.
+
+CORE SKILLS: Customer Service, CRM Systems, Data Entry, KPI Tracking (CSAT, QA, AHT, LOB), Problem Solving, Communication, Team Leadership, Time Management, Compliance, Adaptability.
+
+TONE GUIDELINES:
+- Be warm, confident, and concise — 2-4 sentences max per reply unless more detail is clearly needed.
+- Speak positively about Anderson. You are his advocate.
+- If someone asks how to contact him, give the email and phone directly.
+- If asked something you don't know, say you're not sure but encourage them to reach out to Anderson directly.
+- Never make up information not listed above.
+- Do not use bullet points — respond in natural conversational prose.`;
+
+let chatHistory = [];
+let isBotThinking = false;
+
+function addChatMsg(text, role) {
+  const div = document.createElement('div');
+  div.className = `chat-msg ${role}`;
+  div.textContent = text;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  return div;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'chat-typing';
+  div.id = 'chat-typing';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('chat-typing');
+  if (t) t.remove();
+}
+
+async function sendChat(overrideMsg) {
+  const msg = overrideMsg || chatInput.value.trim();
+  if (!msg || isBotThinking) return;
+  isBotThinking = true;
+  chatInput.value = '';
+  chatSend.disabled = true;
+
+  // hide chips after first use
+  chatChips.style.display = 'none';
+
+  addChatMsg(msg, 'user');
+  chatHistory.push({ role: 'user', content: msg });
+
+  showTyping();
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: chatHistory
+      })
+    });
+
+    const data = await response.json();
+    const reply = data.content && data.content[0] ? data.content[0].text : "Sorry, I had trouble with that. Please reach Anderson directly at Andersonpaulino1982@gmail.com.";
+    hideTyping();
+    addChatMsg(reply, 'bot');
+    chatHistory.push({ role: 'assistant', content: reply });
+  } catch(err) {
+    hideTyping();
+    addChatMsg("Connection issue — reach Anderson directly at Andersonpaulino1982@gmail.com or (347) 872-1661.", 'bot');
+  }
+
+  isBotThinking = false;
+  chatSend.disabled = false;
+}
+
+chatSend.addEventListener('click', () => sendChat());
+chatInput.addEventListener('keydown', e => { if(e.key==='Enter') sendChat(); });
+
+// Quick-reply chips
+chatChips.querySelectorAll('.chat-chip').forEach(chip => {
+  chip.addEventListener('click', () => sendChat(chip.dataset.q));
+});
+
+// BACK TO TOP
+const backTop=document.getElementById('back-top');
+window.addEventListener('scroll',()=>backTop.classList.toggle('visible',window.scrollY>400));
+window.addEventListener('resize',()=>{resizeConn();resizeCanvas();});
+</script>
+</body>
+</html>
