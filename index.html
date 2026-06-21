@@ -92,10 +92,7 @@
 
   /* SECTIONS */
   .section { padding:70px 0; }
-  .section-eyebrow { display:flex;align-items:center;gap:12px;margin-bottom:12px; }
-  .eyebrow-line { height:1px;flex:1;max-width:60px;background:linear-gradient(90deg,var(--purple),transparent); }
-  .eyebrow-label { font-family:var(--mono);font-size:0.65rem;letter-spacing:0.2em;color:var(--purple);text-transform:uppercase; }
-  .section-title { font-family:var(--display);font-size:clamp(1.3rem,3vw,1.9rem);font-weight:700;letter-spacing:0.05em;margin-bottom:40px; }
+  /* .section-eyebrow / .section-title retained for .title-accent use in brut-title */
   .title-accent { color:var(--cyan);text-shadow:var(--cyan-glow); }
 
   /* GLASS CARD */
@@ -215,8 +212,250 @@
     .hero{grid-template-columns:1fr;}
     .terminal{transform:none;}
     .contact-grid,.edu-grid{grid-template-columns:1fr;}
-    .stats-row{grid-template-columns:repeat(2,1fr);}
+    .bento-grid{grid-template-columns:repeat(2,1fr);} .bento-wide{grid-column:span 2;}
   }
+
+  /* ══ TIMELINE ══ */
+  .timeline-track { display:flex; gap:0; overflow-x:auto; padding-bottom:8px; }
+  .timeline-track::-webkit-scrollbar { height:4px; }
+  .timeline-track::-webkit-scrollbar-thumb { background:var(--cyan-dim); border-radius:2px; }
+  .tl-item { display:flex; flex-direction:column; align-items:center; min-width:160px; flex:1; position:relative; }
+  .tl-item:not(:last-child)::after { content:''; position:absolute; top:28px; left:50%; width:100%; height:2px; background:linear-gradient(90deg,var(--cyan),var(--purple)); z-index:0; }
+  .tl-year { font-family:var(--display); font-size:0.75rem; color:var(--cyan); letter-spacing:0.12em; margin-bottom:8px; text-shadow:var(--cyan-glow); }
+  .tl-dot { width:16px; height:16px; border-radius:50%; background:var(--glass); border:2px solid var(--cyan); z-index:1; box-shadow:var(--cyan-glow); margin-bottom:10px; flex-shrink:0; }
+  .tl-dot-active { background:var(--cyan); animation:pulse-dot 2s infinite; }
+  .tl-text { font-size:0.72rem; color:var(--text-dim); text-align:center; line-height:1.5; padding:0 8px; }
+
+  /* ══ CERT GRID ══ */
+  .cert-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:8px; }
+  .cert-card { padding:20px 18px; border-left:3px solid var(--cyan); transition:all 0.3s; }
+  .cert-card:hover { border-color:var(--purple); box-shadow:4px 0 0 var(--purple); }
+  .cert-org { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.15em; color:var(--purple); text-transform:uppercase; margin-bottom:6px; }
+  .cert-name { font-size:0.82rem; color:var(--text); font-weight:600; line-height:1.4; margin-bottom:6px; }
+  .cert-year { font-family:var(--mono); font-size:0.65rem; color:var(--cyan); }
+
+  /* ══ TECH TAGS ══ */
+  .tech-tags { display:flex; flex-wrap:wrap; gap:8px; }
+  .tech-tag { font-family:var(--mono); font-size:0.65rem; letter-spacing:0.08em; padding:5px 12px; border-radius:3px; border:1px solid; transition:all 0.2s; }
+  .tech-tag.cyan { border-color:rgba(0,245,255,0.35); color:var(--cyan); background:var(--cyan-dim); box-shadow:2px 2px 0 rgba(0,245,255,0.2); }
+  .tech-tag.cyan:hover { box-shadow:3px 3px 0 var(--cyan); }
+  .tech-tag.purple { border-color:rgba(180,79,255,0.35); color:var(--purple); background:var(--purple-dim); box-shadow:2px 2px 0 rgba(180,79,255,0.2); }
+  .tech-tag.purple:hover { box-shadow:3px 3px 0 var(--purple); }
+
+  @media(max-width:768px) {
+    .cert-grid { grid-template-columns:repeat(2,1fr); }
+    .timeline-track { flex-direction:column; }
+    .tl-item { flex-direction:row; min-width:unset; gap:12px; align-items:flex-start; }
+    .tl-item::after { display:none; }
+    .tl-dot { flex-shrink:0; margin:2px 0 0; }
+    .tl-text { text-align:left; }
+  }
+
+  /* ══ GAME SECTION ══ */
+  .game-section { padding: 70px 0; }
+
+  .game-feature-card {
+    background: var(--glass);
+    border: 2px solid rgba(0,245,255,0.3);
+    border-radius: 16px;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    box-shadow: 6px 6px 0 rgba(180,79,255,0.4), var(--cyan-glow);
+    margin-bottom: 28px;
+    transition: box-shadow 0.3s, transform 0.3s;
+  }
+  .game-feature-card:hover {
+    box-shadow: 8px 8px 0 var(--purple), 0 0 60px rgba(0,245,255,0.2);
+    transform: translate(-2px,-2px);
+  }
+
+  .game-meta-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(0,245,255,0.15);
+    background: rgba(0,0,0,0.3);
+  }
+  .game-meta-left { display: flex; align-items: center; gap: 14px; }
+  .game-dot { width: 10px; height: 10px; border-radius: 50%; background: #28c840; box-shadow: 0 0 8px #28c840; animation: pulse-dot 2s ease-in-out infinite; }
+  @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+  .game-title-label {
+    font-family: var(--display);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: var(--cyan);
+    text-shadow: var(--cyan-glow);
+  }
+  .game-built-badge {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--bg);
+    background: var(--purple);
+    padding: 3px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 0 var(--cyan);
+  }
+  .game-meta-right { display: flex; gap: 10px; align-items: center; }
+  .game-tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border: 1px solid;
+    border-radius: 3px;
+  }
+  .game-tag-cyan { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); }
+  .game-tag-purple { border-color: var(--purple); color: var(--purple); background: var(--purple-dim); }
+
+  .game-iframe-wrap {
+    position: relative;
+    width: 100%;
+    height: 620px;
+    background: #000;
+  }
+  .game-iframe-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+  .game-iframe-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(5,8,16,0.92);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+    transition: opacity 0.4s ease;
+    gap: 16px;
+    z-index: 10;
+  }
+  .game-iframe-overlay.hidden { opacity: 0; pointer-events: none; }
+  .game-play-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--display);
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--bg);
+    background: var(--cyan);
+    border: none;
+    padding: 16px 36px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 5px 5px 0 var(--purple);
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .game-play-btn:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--purple); }
+  .game-play-btn:active { transform: translate(2px,2px); box-shadow: 3px 3px 0 var(--purple); }
+  .game-play-icon { font-size: 1.3rem; }
+  .game-overlay-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .game-info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    padding: 20px 24px;
+    border-top: 1px solid rgba(0,245,255,0.1);
+    background: rgba(0,0,0,0.2);
+  }
+  .game-info-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .game-info-key {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .game-info-val {
+    font-size: 0.82rem;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .game-info-val.cyan { color: var(--cyan); }
+  .game-info-val.purple { color: var(--purple); }
+
+  .game-desc-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .game-about { padding: 28px; }
+  .game-about-title {
+    font-family: var(--display);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--purple);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .game-about-body {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+  .game-features { padding: 28px; }
+  .game-feature-list { list-style: none; }
+  .game-feature-list li {
+    font-size: 0.83rem;
+    color: var(--text-dim);
+    padding: 6px 0 6px 20px;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .game-feature-list li:last-child { border-bottom: none; }
+  .game-feature-list li::before {
+    content: '⬡';
+    position: absolute;
+    left: 0;
+    color: var(--cyan);
+    font-size: 0.6rem;
+    top: 8px;
+  }
+  .game-open-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--cyan);
+    text-decoration: none;
+    border: 1px solid var(--cyan);
+    padding: 8px 16px;
+    border-radius: 3px;
+    margin-top: 16px;
+    transition: all 0.2s;
+  }
+  .game-open-link:hover { background: var(--cyan-dim); box-shadow: var(--cyan-glow); }
+
+  @media(max-width:768px) {
+    .game-desc-card { grid-template-columns: 1fr; }
+    .game-info-row { grid-template-columns: 1fr 1fr; }
+    .game-iframe-wrap { height: 480px; }
+  }
+
   @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}}
 </style>
 </head>
@@ -233,6 +472,8 @@
     <li><a href="#experience">experience</a></li>
     <li><a href="#skills">skills</a></li>
     <li><a href="#education">education</a></li>
+    <li><a href="#portfolio">portfolio</a></li>
+    <li><a href="#game">game</a></li>
     <li><a href="#contact">contact</a></li>
   </ul>
 </nav>
@@ -318,6 +559,24 @@
       <div class="bento-tag">⬡ Availability</div>
       <div class="bento-headline">Actively Seeking Full-Time Roles</div>
       <div class="bento-body">Customer service, call center operations, team leadership, or operations coordination. Based in Casselberry, FL — open to on-site, hybrid, or remote.</div>
+    </div>
+    <!-- bilingual -->
+    <div class="bento-cell accent-cyan" style="text-align:center;">
+      <span class="bento-icon">🌐</span>
+      <span class="stat-val" style="font-size:1.3rem;">2</span>
+      <span class="stat-label">Languages: English & Spanish</span>
+    </div>
+    <!-- certs -->
+    <div class="bento-cell accent-purple" style="text-align:center;">
+      <span class="bento-icon">🏆</span>
+      <span class="stat-val" style="font-size:1.3rem;">4</span>
+      <span class="stat-label">Google & Coursera Certs</span>
+    </div>
+    <!-- award -->
+    <div class="bento-cell bento-wide accent-cyan">
+      <div class="bento-tag">⬡ Recognition</div>
+      <div class="bento-headline">Employer of the Year — 2021</div>
+      <div class="bento-body">Recognized for outstanding leadership, reliability, and performance during tenure at Allied Universal. Also brings verified certifications in Digital Marketing, Business Intelligence, Data Analytics, and Cybersecurity.</div>
     </div>
   </div>
 
@@ -454,6 +713,188 @@
     </div>
   </section>
 
+
+  <div class="divider"></div>
+
+
+  <!-- PORTFOLIO / PROJECTS SECTION -->
+  <section class="section reveal" id="portfolio">
+    <div class="brut-label">⬡ The Transformation</div>
+    <h2 class="brut-title">Portfolio & <span class="title-accent">Projects</span></h2>
+
+    <!-- Timeline of growth -->
+    <div class="timeline-wrap glass-card" style="padding:32px;margin-bottom:28px;">
+      <div class="brut-label" style="margin-bottom:16px;">⬡ Timeline of Transformations</div>
+      <div class="timeline-track">
+        <div class="tl-item">
+          <div class="tl-year">2020</div>
+          <div class="tl-dot"></div>
+          <div class="tl-text">Explored entrepreneurship and business opportunities</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2021</div>
+          <div class="tl-dot"></div>
+          <div class="tl-text">Worked in security — earned Employer of the Year</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2022</div>
+          <div class="tl-dot"></div>
+          <div class="tl-text">Started coding — earned Google Data Analytics & Cybersecurity certs</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2023</div>
+          <div class="tl-dot"></div>
+          <div class="tl-text">Earned Google Digital Marketing & Business Intelligence certs</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2024</div>
+          <div class="tl-dot"></div>
+          <div class="tl-text">Built professional network, pursued data analytics career, shipped first web projects</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2025</div>
+          <div class="tl-dot tl-dot-active"></div>
+          <div class="tl-text">Launched Stock Wars Tycoon, built interactive portfolio, joined IntouchCX as top-performing CSR</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Certifications -->
+    <div class="brut-label" style="margin-bottom:16px;">⬡ Certifications</div>
+    <div class="cert-grid">
+      <div class="glass-card cert-card">
+        <div class="cert-org">Google</div>
+        <div class="cert-name">Digital Marketing & E-commerce</div>
+        <div class="cert-year">2023</div>
+      </div>
+      <div class="glass-card cert-card">
+        <div class="cert-org">Google</div>
+        <div class="cert-name">Business Intelligence</div>
+        <div class="cert-year">2023</div>
+      </div>
+      <div class="glass-card cert-card">
+        <div class="cert-org">Google</div>
+        <div class="cert-name">Data Analytics</div>
+        <div class="cert-year">2022</div>
+      </div>
+      <div class="glass-card cert-card">
+        <div class="cert-org">Coursera</div>
+        <div class="cert-name">Cybersecurity with Python</div>
+        <div class="cert-year">2022</div>
+      </div>
+    </div>
+
+    <!-- Tech skills -->
+    <div class="brut-label" style="margin-top:32px;margin-bottom:16px;">⬡ Technical Skills</div>
+    <div class="tech-tags-wrap glass-card" style="padding:24px;">
+      <div class="tech-tags">
+        <span class="tech-tag cyan">HTML</span>
+        <span class="tech-tag purple">CSS</span>
+        <span class="tech-tag cyan">JavaScript</span>
+        <span class="tech-tag purple">React</span>
+        <span class="tech-tag cyan">TypeScript</span>
+        <span class="tech-tag purple">React Native</span>
+        <span class="tech-tag cyan">Data Analysis</span>
+        <span class="tech-tag purple">Business Intelligence</span>
+        <span class="tech-tag cyan">Data Visualization</span>
+        <span class="tech-tag purple">Digital Marketing</span>
+        <span class="tech-tag cyan">Cybersecurity Awareness</span>
+        <span class="tech-tag purple">Dashboard Development</span>
+        <span class="tech-tag cyan">Statistical Analysis</span>
+        <span class="tech-tag purple">Responsive Web Design</span>
+        <span class="tech-tag cyan">Front-End Engineering</span>
+        <span class="tech-tag purple">UI/UX Design</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+  <!-- GAME SECTION -->
+  <section class="game-section reveal" id="game">
+    <div class="brut-label">⬡ Side Project</div>
+    <h2 class="brut-title">Stock Wars <span class="title-accent">Tycoon</span></h2>
+
+    <!-- Main playable card -->
+    <div class="game-feature-card">
+      <div class="game-meta-bar">
+        <div class="game-meta-left">
+          <div class="game-dot"></div>
+          <div class="game-title-label">STOCK WARS TYCOON — BETA</div>
+          <div class="game-built-badge">Built by Anderson</div>
+        </div>
+        <div class="game-meta-right">
+          <span class="game-tag game-tag-cyan">HTML / CSS / JS</span>
+          <span class="game-tag game-tag-purple">GitHub Pages</span>
+          <a class="game-open-link" href="https://bnsceo.github.io/stock-wars-tycoon-beta/" target="_blank" rel="noopener">↗ Open Full Screen</a>
+        </div>
+      </div>
+
+      <!-- Iframe with click-to-play overlay -->
+      <div class="game-iframe-wrap">
+        <div class="game-iframe-overlay" id="game-overlay">
+          <div class="game-overlay-label">⬡ Interactive Demo — Click to Play</div>
+          <button class="game-play-btn" id="game-play-btn">
+            <span class="game-play-icon">▶</span>
+            Launch Game
+          </button>
+          <div class="game-overlay-label" style="font-size:0.58rem;opacity:0.5">Stock Wars Tycoon Beta · Built from scratch</div>
+        </div>
+        <iframe
+          id="game-iframe"
+          src="about:blank"
+          data-src="https://bnsceo.github.io/stock-wars-tycoon-beta/"
+          title="Stock Wars Tycoon Beta"
+          allow="autoplay"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
+        </iframe>
+      </div>
+
+      <!-- Stats bar -->
+      <div class="game-info-row">
+        <div class="game-info-cell">
+          <span class="game-info-key">Platform</span>
+          <span class="game-info-val cyan">Browser / GitHub Pages</span>
+        </div>
+        <div class="game-info-cell">
+          <span class="game-info-key">Type</span>
+          <span class="game-info-val">Stock Trading Simulation</span>
+        </div>
+        <div class="game-info-cell">
+          <span class="game-info-key">Status</span>
+          <span class="game-info-val purple">Beta — Live</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- About + Features -->
+    <div class="game-desc-card">
+      <div class="glass-card game-about">
+        <div class="game-about-title">⟁ About the Game</div>
+        <div class="game-about-body">
+          Stock Wars Tycoon is a browser-based stock market simulation game I designed and coded entirely from scratch. The goal: turn $2,000 into a market empire over 30 in-game days — buying, selling, and shorting stocks across global markets in New York, London, Tokyo, Dubai, Shanghai, Berlin, São Paulo, and Sydney.
+          <br><br>
+          I built this independently as a creative coding project, demonstrating that my technical curiosity doesn't stop at spreadsheets and CRM systems.
+        </div>
+        <a class="game-open-link" href="https://github.com/bnsceo/stock-wars-tycoon-beta" target="_blank" rel="noopener">⌥ View Source on GitHub</a>
+      </div>
+      <div class="glass-card game-features">
+        <div class="game-about-title">⟁ Features Built</div>
+        <ul class="game-feature-list">
+          <li>Long & short selling mechanics across 8 global markets</li>
+          <li>Dynamic market trend system (bullish / bearish / neutral)</li>
+          <li>Live event log with news that moves prices</li>
+          <li>Margin trading & loan system with debt tracking</li>
+          <li>Price history modal with per-stock charting</li>
+          <li>Save / Load game state functionality</li>
+          <li>Difficulty settings (Easy / Normal / Hard)</li>
+          <li>Sound effects & background music with volume control</li>
+          <li>Transaction fee toggle & settings panel</li>
+          <li>30-day win condition with net worth scoring</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <div class="divider"></div>
 
   <!-- CONTACT -->
@@ -489,6 +930,20 @@
           <div>
             <div class="contact-label">STATUS</div>
             <div class="contact-val" style="color:var(--cyan)">● Available for new roles</div>
+          </div>
+        </div>
+        <div class="glass-card contact-item">
+          <div class="contact-icon">🐙</div>
+          <div>
+            <div class="contact-label">GITHUB</div>
+            <div class="contact-val"><a href="https://github.com/Anderson-s-Projects" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:none;">github.com/Anderson-s-Projects</a></div>
+          </div>
+        </div>
+        <div class="glass-card contact-item">
+          <div class="contact-icon">💼</div>
+          <div>
+            <div class="contact-label">LINKEDIN</div>
+            <div class="contact-val"><a href="https://www.linkedin.com/in/82anderson-paulino/" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:none;">linkedin.com/in/82anderson-paulino</a></div>
           </div>
         </div>
       </div>
@@ -594,29 +1049,45 @@ boot.forEach(b=>setTimeout(()=>addTermLine('out',b.text),b.delay));
 termInput.addEventListener('keydown',e=>{if(e.key==='Enter'){runCommand(termInput.value);termInput.value='';}});
 
 // SCROLL REVEAL
-const reveals=document.querySelectorAll('.reveal');
-const revObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
+const reveals = document.querySelectorAll('.reveal');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
       e.target.classList.add('visible');
-      e.target.querySelectorAll('.skill-fill').forEach(bar=>{bar.style.width=bar.dataset.pct+'%';});
+      e.target.querySelectorAll('.skill-fill').forEach(bar => { bar.style.width = bar.dataset.pct + '%'; });
+      // Trigger counters inside this reveal block
+      e.target.querySelectorAll('[data-count]').forEach(el => {
+        setTimeout(() => animateCounter(el), 200);
+      });
     }
   });
-},{threshold:0.1});
-reveals.forEach(r=>revObs.observe(r));
+}, { threshold: 0.1 });
+reveals.forEach(r => revObs.observe(r));
 
-// COUNTER ANIMATION
-const counters=document.querySelectorAll('[data-count]');
-const countObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      const el=e.target; const target=parseInt(el.dataset.count); let current=0; const inc=target/40;
-      const timer=setInterval(()=>{current+=inc;if(current>=target){current=target;clearInterval(timer);}el.textContent=Math.floor(current);},40);
-      countObs.unobserve(el);
+// COUNTER ANIMATION — triggered after reveal makes element visible
+function animateCounter(el) {
+  if (el.dataset.animated) return;
+  el.dataset.animated = '1';
+  const target = parseInt(el.dataset.count);
+  let current = 0;
+  const inc = target / 40;
+  const timer = setInterval(() => {
+    current += inc;
+    if (current >= target) { current = target; clearInterval(timer); }
+    el.textContent = Math.floor(current);
+  }, 40);
+}
+// Also run counters when their parent .reveal becomes visible
+const counters = document.querySelectorAll('[data-count]');
+const countObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter(e.target);
+      countObs.unobserve(e.target);
     }
   });
-},{threshold:0.5});
-counters.forEach(c=>countObs.observe(c));
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+counters.forEach(c => countObs.observe(c));
 
 // CONNECTION CANVAS
 const connCanvas=document.getElementById('conn-canvas');
@@ -681,7 +1152,33 @@ PREVIOUS ROLE:
 - Dates: 2020–2024
 - Achievements: Supervised teams in high-traffic environments, coordinated scheduling/operations/incident response across multiple sites, prepared detailed reports, trained new officers, served as liaison between management and clients.
 
-CORE SKILLS: Customer Service, CRM Systems, Data Entry, KPI Tracking (CSAT, QA, AHT, LOB), Problem Solving, Communication, Team Leadership, Time Management, Compliance, Adaptability.
+CORE PROFESSIONAL SKILLS: Customer Service, CRM Systems, Data Entry, KPI Tracking (CSAT, QA, AHT, LOB), Problem Solving, Communication, Team Leadership, Time Management, Compliance, Adaptability.
+
+TECHNICAL SKILLS (self-taught): HTML (90%), CSS (85%), JavaScript (80%), React (75%), TypeScript (70%), UI Design (65%), React Native, Responsive Web Design, Front-End Engineering, Data Analysis, Business Intelligence, Data Visualization, Digital Marketing Strategy, Dashboard Development, Statistical Analysis, Cybersecurity Awareness.
+
+CERTIFICATIONS:
+- Google Digital Marketing & E-commerce (2023)
+- Google Business Intelligence (2023)
+- Google Data Analytics (2022)
+- Cybersecurity with Python — Coursera (2022)
+
+EDUCATION: CUNY Bronx Community College, Bronx, NY (2013 - Continuing Education). Strong problem-solving skills developed through business case studies and analytical coursework.
+
+LANGUAGES: Bilingual — English and Spanish (fluent in both).
+
+AWARDS: Employer of the Year (2021) — recognized at Allied Universal.
+
+TIMELINE / GROWTH STORY:
+- 2020: Explored entrepreneurship and business opportunities
+- 2021: Worked in security, researching business models; earned Employer of the Year
+- 2022: Started coding and data analytics; earned Google Data Analytics & Cybersecurity certs
+- 2023: Expanded into digital marketing and business intelligence; earned two more Google certs
+- 2024: Built professional network, pursued data analytics career
+- 2025: Launched Stock Wars Tycoon game, built interactive portfolio at bnsceo.github.io/mainpro, joined IntouchCX as CSR
+
+PORTFOLIO SITE: https://bnsceo.github.io/mainpro — showcases web projects, interactive game, and technical skills.
+
+SOCIAL LINKS: GitHub: github.com/Anderson-s-Projects | LinkedIn: linkedin.com/in/82anderson-paulino
 
 TONE GUIDELINES:
 - Be warm, confident, and concise — 2-4 sentences max per reply unless more detail is clearly needed.
@@ -860,6 +1357,15 @@ document.getElementById('download-btn').addEventListener('click', function(e) {
   printWin.document.close();
   setTimeout(() => { printWin.focus(); printWin.print(); }, 800);
 });
+
+// GAME IFRAME — click to load
+document.getElementById('game-play-btn').addEventListener('click', function() {
+  const iframe = document.getElementById('game-iframe');
+  const overlay = document.getElementById('game-overlay');
+  iframe.src = iframe.dataset.src;
+  overlay.classList.add('hidden');
+});
+
 </script>
 </body>
 </html>
