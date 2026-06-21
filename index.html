@@ -102,11 +102,35 @@
   .glass-card { background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transition:all 0.3s ease; }
   .glass-card:hover { background:var(--glass-strong);border-color:rgba(0,245,255,0.2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.4),var(--cyan-glow); }
 
-  /* STATS */
-  .stats-row { display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:50px; }
-  .stat-card { padding:24px 20px;text-align:center; }
-  .stat-val { font-family:var(--display);font-size:1.8rem;font-weight:900;color:var(--cyan);text-shadow:var(--cyan-glow);display:block; }
-  .stat-label { font-size:0.7rem;color:var(--text-dim);letter-spacing:0.08em; }
+  /* ══ BENTO GRID ══ */
+  .bento-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:50px; }
+  .bento-wide { grid-column:span 2; }
+  .bento-cell { background:var(--glass);border:2px solid var(--glass-border);border-radius:18px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:26px 22px;position:relative;overflow:hidden;transition:all 0.3s ease; }
+  .bento-cell::after { content:'';position:absolute;inset:0;border-radius:inherit;opacity:0;transition:opacity 0.3s;background:linear-gradient(135deg,var(--cyan-dim),transparent 60%); }
+  .bento-cell:hover::after { opacity:1; }
+  .bento-cell:hover { border-color:rgba(0,245,255,0.3);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,0.5),var(--cyan-glow); }
+  .bento-cell.accent-purple { border-color:rgba(180,79,255,0.35);box-shadow:4px 4px 0 rgba(180,79,255,0.35); }
+  .bento-cell.accent-cyan { border-color:rgba(0,245,255,0.35);box-shadow:4px 4px 0 rgba(0,245,255,0.35); }
+  .bento-cell.accent-purple:hover { border-color:var(--purple);box-shadow:6px 6px 0 var(--purple);transform:translate(-2px,-2px); }
+  .bento-cell.accent-cyan:hover { border-color:var(--cyan);box-shadow:6px 6px 0 var(--cyan);transform:translate(-2px,-2px); }
+  .stat-val { font-family:var(--display);font-size:2.2rem;font-weight:900;color:var(--cyan);text-shadow:var(--cyan-glow);display:block;line-height:1; }
+  .stat-label { font-size:0.66rem;color:var(--text-dim);letter-spacing:0.12em;margin-top:6px;display:block;text-transform:uppercase; }
+  .bento-icon { font-size:1.3rem;margin-bottom:10px;display:block; }
+  .bento-tag { display:inline-block;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.15em;color:var(--purple);border:1px solid var(--purple);border-radius:2px;padding:2px 8px;margin-bottom:8px;text-transform:uppercase; }
+  .bento-headline { font-family:var(--display);font-size:0.82rem;font-weight:700;letter-spacing:0.06em;color:var(--text);margin-bottom:6px; }
+  .bento-body { font-size:0.78rem;color:var(--text-dim);line-height:1.55; }
+
+  /* ══ BRUTALIST HEADERS ══ */
+  .brut-label { display:inline-block;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--bg);background:var(--cyan);padding:4px 12px;margin-bottom:10px;box-shadow:3px 3px 0 var(--purple); }
+  .brut-title { font-family:var(--display);font-size:clamp(1.4rem,3vw,2.2rem);font-weight:900;letter-spacing:0.04em;line-height:1.05;color:var(--text);margin-bottom:40px;border-bottom:3px solid var(--cyan);padding-bottom:14px;position:relative; }
+  .brut-title::after { content:'';position:absolute;bottom:-6px;left:0;width:60px;height:3px;background:var(--purple); }
+  .brut-title .title-accent { color:var(--cyan);text-shadow:var(--cyan-glow); }
+
+  /* ══ DOWNLOAD BUTTON ══ */
+  .btn-download { display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;padding:12px 22px;border-radius:4px;cursor:pointer;text-decoration:none;border:2px solid var(--cyan);background:var(--cyan);color:var(--bg);font-weight:700;transition:all 0.2s;box-shadow:4px 4px 0 var(--purple); }
+  .btn-download:hover { transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--purple); }
+  .btn-download:active { transform:translate(2px,2px);box-shadow:2px 2px 0 var(--purple); }
+  .btn-download svg { width:14px;height:14px;flex-shrink:0; }
 
   /* EXPERIENCE */
   .exp-grid { display:flex;flex-direction:column;gap:20px; }
@@ -233,9 +257,13 @@
         <span class="chip chip-purple">Problem Resolution</span>
         <span class="chip chip-cyan">Compliance</span>
       </div>
-      <div class="hero-ctas">
+      <div class="hero-ctas" style="flex-wrap:wrap;">
         <a href="#contact" class="btn btn-cyan">⬡ Contact Me</a>
         <a href="#experience" class="btn btn-ghost">View Experience ↓</a>
+        <a id="download-btn" class="btn-download" href="#" title="Download Resume PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
+          Resume PDF
+        </a>
       </div>
     </div>
 
@@ -257,23 +285,39 @@
     </div>
   </section>
 
-  <!-- STATS -->
-  <div class="stats-row reveal">
-    <div class="glass-card stat-card">
+  <!-- BENTO GRID -->
+  <div class="bento-grid reveal">
+    <!-- stat: QA -->
+    <div class="bento-cell accent-cyan" style="text-align:center;">
       <span class="stat-val" data-count="95">0</span>
-      <span class="stat-label">QA score %</span>
+      <span class="stat-label">QA Score %</span>
     </div>
-    <div class="glass-card stat-card">
+    <!-- stat: LOB -->
+    <div class="bento-cell accent-purple" style="text-align:center;">
       <span class="stat-val" data-count="95">0</span>
-      <span class="stat-label">LOB score</span>
+      <span class="stat-label">LOB Score</span>
     </div>
-    <div class="glass-card stat-card">
-      <span class="stat-val" data-count="4">0</span>
-      <span class="stat-label">pts above team avg</span>
+    <!-- stat: above avg -->
+    <div class="bento-cell accent-cyan" style="text-align:center;">
+      <span class="stat-val">+4.17</span>
+      <span class="stat-label">Above Team Avg</span>
     </div>
-    <div class="glass-card stat-card">
+    <!-- stat: years -->
+    <div class="bento-cell accent-purple" style="text-align:center;">
       <span class="stat-val" data-count="7">0</span>
-      <span class="stat-label">years experience</span>
+      <span class="stat-label">Years Experience</span>
+    </div>
+    <!-- wide: summary -->
+    <div class="bento-cell bento-wide accent-cyan">
+      <div class="bento-tag">⬡ Profile</div>
+      <div class="bento-headline">Results-Driven & Data-Backed</div>
+      <div class="bento-body">Every metric tracked. Every evaluation passed. Anderson brings measurable, consistent performance to every role — not just effort, but documented results.</div>
+    </div>
+    <!-- wide: seeking -->
+    <div class="bento-cell bento-wide accent-purple">
+      <div class="bento-tag">⬡ Availability</div>
+      <div class="bento-headline">Actively Seeking Full-Time Roles</div>
+      <div class="bento-body">Customer service, call center operations, team leadership, or operations coordination. Based in Casselberry, FL — open to on-site, hybrid, or remote.</div>
     </div>
   </div>
 
@@ -281,11 +325,8 @@
 
   <!-- EXPERIENCE -->
   <section class="section reveal" id="experience">
-    <div class="section-eyebrow">
-      <div class="eyebrow-line"></div>
-      <div class="eyebrow-label">⬡ Professional Record</div>
-    </div>
-    <h2 class="section-title">Work <span class="title-accent">Experience</span></h2>
+    <div class="brut-label">⬡ Professional Record</div>
+    <h2 class="brut-title">Work <span class="title-accent">Experience</span></h2>
 
     <div class="exp-grid">
       <div class="glass-card exp-card">
@@ -327,11 +368,8 @@
 
   <!-- SKILLS -->
   <section class="section reveal" id="skills">
-    <div class="section-eyebrow">
-      <div class="eyebrow-line"></div>
-      <div class="eyebrow-label">⬡ Core Competencies</div>
-    </div>
-    <h2 class="section-title">Skill <span class="title-accent">Matrix</span></h2>
+    <div class="brut-label">⬡ Core Competencies</div>
+    <h2 class="brut-title">Skill <span class="title-accent">Matrix</span></h2>
 
     <div class="skills-grid">
       <div class="glass-card skill-group">
@@ -398,11 +436,8 @@
 
   <!-- EDUCATION / CERTS -->
   <section class="section reveal" id="education">
-    <div class="section-eyebrow">
-      <div class="eyebrow-line"></div>
-      <div class="eyebrow-label">⬡ Credentials</div>
-    </div>
-    <h2 class="section-title">Education & <span class="title-accent">Training</span></h2>
+    <div class="brut-label">⬡ Credentials</div>
+    <h2 class="brut-title">Education & <span class="title-accent">Training</span></h2>
     <div class="edu-grid">
       <div class="glass-card edu-card">
         <div class="edu-year">2025</div>
@@ -423,11 +458,8 @@
 
   <!-- CONTACT -->
   <section class="section reveal" id="contact">
-    <div class="section-eyebrow">
-      <div class="eyebrow-line"></div>
-      <div class="eyebrow-label">⬡ Get In Touch</div>
-    </div>
-    <h2 class="section-title">Open to <span class="title-accent">Opportunities</span></h2>
+    <div class="brut-label">⬡ Get In Touch</div>
+    <h2 class="brut-title">Open to <span class="title-accent">Opportunities</span></h2>
 
     <div class="contact-grid">
       <div class="contact-info">
@@ -474,10 +506,14 @@
           <div class="chat-msg bot">Hi! I'm an AI assistant who knows Anderson's full background. Ask me anything about his experience, performance, skills, or how to get in touch.</div>
         </div>
         <div class="chat-chips" id="chat-chips">
-          <button class="chat-chip" data-q="What are his top performance metrics?">📊 Performance</button>
-          <button class="chat-chip" data-q="What roles is he looking for?">🎯 Looking for</button>
+          <button class="chat-chip" data-q="What are his top performance metrics?">📊 Metrics</button>
+          <button class="chat-chip" data-q="What roles is he looking for?">🎯 Open to</button>
           <button class="chat-chip" data-q="What are his strongest skills?">⚡ Skills</button>
           <button class="chat-chip" data-q="How do I contact Anderson?">📬 Contact</button>
+          <button class="chat-chip" data-q="Tell me about his most recent job.">💼 Last Role</button>
+          <button class="chat-chip" data-q="What makes Anderson stand out from other candidates?">🌟 Why hire him</button>
+          <button class="chat-chip" data-q="Does he have leadership experience?">👥 Leadership</button>
+          <button class="chat-chip" data-q="Is he available to start immediately?">📅 Availability</button>
         </div>
         <div class="chat-input-row">
           <input class="chat-input" type="text" id="chat-input" placeholder="Ask anything about Anderson...">
@@ -734,6 +770,96 @@ chatChips.querySelectorAll('.chat-chip').forEach(chip => {
 const backTop=document.getElementById('back-top');
 window.addEventListener('scroll',()=>backTop.classList.toggle('visible',window.scrollY>400));
 window.addEventListener('resize',()=>{resizeConn();resizeCanvas();});
+
+// DOWNLOAD RESUME PDF (generates a printable version via a new window)
+document.getElementById('download-btn').addEventListener('click', function(e) {
+  e.preventDefault();
+  const printWin = window.open('', '_blank');
+  printWin.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Anderson Paulino — Resume</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Space Grotesk',sans-serif;color:#111;background:#fff;padding:40px 48px;max-width:760px;margin:0 auto;font-size:14px;line-height:1.6}
+    h1{font-size:2rem;font-weight:700;letter-spacing:0.02em;margin-bottom:2px}
+    .subtitle{font-family:'JetBrains Mono',monospace;font-size:0.72rem;letter-spacing:0.15em;color:#6b21a8;text-transform:uppercase;margin-bottom:4px}
+    .contact-line{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#555;margin-bottom:20px;display:flex;gap:20px;flex-wrap:wrap}
+    .divider{border:none;border-top:2px solid #111;margin:18px 0 14px}
+    .divider-thin{border:none;border-top:1px solid #ddd;margin:12px 0}
+    h2{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;color:#111;background:#00f5ff;padding:3px 10px;display:inline-block;margin-bottom:14px;box-shadow:2px 2px 0 #b44fff}
+    .job{margin-bottom:18px}
+    .job-header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap}
+    .job-title{font-weight:700;font-size:0.95rem}
+    .job-date{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#555}
+    .job-company{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#6b21a8;margin-bottom:6px}
+    ul{list-style:none;padding:0}
+    ul li{padding-left:14px;position:relative;margin-bottom:4px;color:#333;font-size:0.875rem}
+    ul li::before{content:'▸';position:absolute;left:0;color:#00bcd4;font-size:0.6rem;top:3px}
+    .skills-block{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+    .skill-pill{font-family:'JetBrains Mono',monospace;font-size:0.65rem;padding:3px 10px;border:1px solid #111;border-radius:2px;background:#f5f5f5}
+    .summary{font-size:0.88rem;color:#333;margin-bottom:4px;line-height:1.65}
+    .stats-row{display:flex;gap:16px;margin-bottom:6px;flex-wrap:wrap}
+    .stat{border:2px solid #111;padding:8px 14px;box-shadow:2px 2px 0 #b44fff}
+    .stat-n{font-size:1.4rem;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1}
+    .stat-l{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:#555}
+    @media print{body{padding:20px 24px}@page{margin:10mm}}
+  </style></head><body>
+  <div class="subtitle">Customer Service Professional</div>
+  <h1>Anderson Paulino</h1>
+  <div class="contact-line">
+    <span>Casselberry, FL</span>
+    <span>(347) 872-1661</span>
+    <span>Andersonpaulino1982@gmail.com</span>
+    <span style="color:#6b21a8;font-weight:600">● Actively Seeking</span>
+  </div>
+  <hr class="divider">
+  <h2>Summary</h2>
+  <p class="summary">Results-driven Customer Service Professional with experience in high-volume call center and supervisory roles. Consistently exceeded performance metrics (95% QA, 95 LOB) while delivering efficient, empathetic support. Skilled in CRM systems, KPI tracking, and problem resolution.</p>
+  <div class="stats-row" style="margin-top:12px">
+    <div class="stat"><div class="stat-n">95%</div><div class="stat-l">QA Score</div></div>
+    <div class="stat"><div class="stat-n">95</div><div class="stat-l">LOB Score</div></div>
+    <div class="stat"><div class="stat-n">+4.17</div><div class="stat-l">Above Team Avg</div></div>
+    <div class="stat"><div class="stat-n">7</div><div class="stat-l">Yrs Experience</div></div>
+  </div>
+  <hr class="divider">
+  <h2>Experience</h2>
+  <div class="job">
+    <div class="job-header"><span class="job-title">Customer Service Representative – PUMA Account</span><span class="job-date">2025</span></div>
+    <div class="job-company">IntouchCX · Altamonte Springs, FL</div>
+    <ul>
+      <li>Achieved 95 LOB score — 4.17 pts above team average of 90.83 — and 95% QA across 10 evaluations</li>
+      <li>Handled high-volume inbound calls, resolving customer issues while maintaining strong CSAT ratings</li>
+      <li>Processed returns, exchanges, and order inquiries with accuracy and efficiency</li>
+      <li>Documented all interactions in CRM systems ensuring full compliance and data accuracy</li>
+      <li>Identified recurring customer pain points and contributed to process improvement initiatives</li>
+    </ul>
+  </div>
+  <hr class="divider-thin">
+  <div class="job">
+    <div class="job-header"><span class="job-title">Shift Supervisor</span><span class="job-date">2020 — 2024</span></div>
+    <div class="job-company">Allied Universal · Orlando, FL</div>
+    <ul>
+      <li>Supervised teams across high-traffic environments, handling escalations calmly and professionally</li>
+      <li>Coordinated scheduling, daily operations, and incident response across multiple client sites</li>
+      <li>Prepared detailed shift reports to maintain accurate documentation and clear communication</li>
+      <li>Trained incoming officers, driving measurable improvements in team performance and consistency</li>
+      <li>Served as primary liaison between management and clients, building trust on both sides</li>
+    </ul>
+  </div>
+  <hr class="divider">
+  <h2>Core Skills</h2>
+  <div class="skills-block">
+    <span class="skill-pill">Customer Service</span><span class="skill-pill">CRM Systems</span>
+    <span class="skill-pill">Data Entry</span><span class="skill-pill">KPI Tracking</span>
+    <span class="skill-pill">CSAT / QA / AHT</span><span class="skill-pill">Problem Resolution</span>
+    <span class="skill-pill">Team Leadership</span><span class="skill-pill">Compliance</span>
+    <span class="skill-pill">Communication</span><span class="skill-pill">Time Management</span>
+    <span class="skill-pill">Training & Coaching</span><span class="skill-pill">Adaptability</span>
+  </div>
+  </body></html>`);
+  printWin.document.close();
+  setTimeout(() => { printWin.focus(); printWin.print(); }, 800);
+});
 </script>
 </body>
 </html>
